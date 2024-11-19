@@ -1,50 +1,40 @@
-Here’s an easy-to-understand description of the databases and their tables for a `.txt` file:
+Here’s the simplified version without bold text or lines:
 
 ---
 
-**Databases and Tables for Carbon Equity Tracker**  
+Database Design for Carbon Equity Tracker  
 
-The Carbon Equity Tracker uses three separate databases to organize information efficiently. Each database has specific tables to store and manage related data.  
+The Carbon Equity Tracker uses three databases to organize information effectively. Each database contains tables designed for specific purposes.  
 
----
+1. Database: cet_login  
+   Purpose: Manages user authentication by securely storing login credentials.  
+   Table:  
+   - Logincred  
+     - username: A unique name for each user (Primary Key).  
+     - password: The user’s password, stored securely.  
 
-### **1️⃣ Database: `cet_login`**  
-- **Purpose:** Handles user authentication by securely storing login credentials.  
-- **Table:**  
-  - **`Logincred`**  
-    - **username**: A unique name for each user (Primary Key).  
-    - **password**: The user’s password, stored securely.  
+2. Database: cet_user  
+   Purpose: Stores individual user data, including daily activities and carbon footprint.  
+   Table:  
+   - User_data  
+     - user_id: A unique identifier for each user (Primary Key).  
+     - daily_commute: Distance traveled daily by the user (in kilometers).  
+     - waste_generated: Amount of waste generated daily (in kg).  
+     - country: The user's country (for region-specific emissions).  
+     - total_emissions: The calculated carbon footprint for the user.  
 
----
+3. Database: cet_industry  
+   Purpose: Stores data for industries to calculate their emissions.  
+   Table:  
+   - Industry_data  
+     - industry_id: A unique identifier for each industry (Primary Key).  
+     - energy_consumed: Total energy used by the industry (in kilowatt-hours).  
+     - materials_used: Amount of raw materials consumed (in tons).  
+     - total_emissions: The calculated carbon footprint for the industry.  
 
-### **2️⃣ Database: `cet_user`**  
-- **Purpose:** Stores individual user data, including their daily activities and carbon footprint.  
-- **Table:**  
-  - **`User_data`**  
-    - **user_id**: A unique identifier for each user (Primary Key).  
-    - **daily_commute**: Distance the user travels daily (in kilometers).  
-    - **waste_generated**: Amount of waste generated daily (in kg).  
-    - **country**: The user's country (to calculate region-specific emissions).  
-    - **total_emissions**: The user’s calculated carbon footprint.  
+Key Features of the Design:  
+- Logical separation of data into different databases for better management.  
+- Relationships between tables are secured using foreign keys, e.g., linking user_id in cet_user with username in cet_login.  
+- Indexes are implemented to improve the performance of frequently used queries.  
 
----
-
-### **3️⃣ Database: `cet_industry`**  
-- **Purpose:** Stores industrial data to calculate emissions for businesses.  
-- **Table:**  
-  - **`Industry_data`**  
-    - **industry_id**: A unique identifier for each industry (Primary Key).  
-    - **energy_consumed**: Total energy used (in kilowatt-hours).  
-    - **materials_used**: Raw materials consumed (in tons).  
-    - **total_emissions**: The calculated carbon footprint for the industry.  
-
----
-
-### **Key Features of the Design**  
-- **Logical Separation:** Data is grouped into separate databases for clarity and better management.  
-- **Secure Relationships:** Foreign keys ensure data connections, e.g., linking `user_id` in `cet_user` with `username` in `cet_login`.  
-- **Performance Optimization:** Indexes are used to speed up data retrieval for common queries.  
-
---- 
-
-This structure ensures secure, fast, and reliable data handling, making carbon tracking efficient and user-friendly.
+This design ensures efficient, secure, and user-friendly data handling.
