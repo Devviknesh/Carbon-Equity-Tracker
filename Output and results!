@@ -1,0 +1,25 @@
+DATABASE DESIGN:
+			We have used 3 databases for this project:
+●	cet_login
+●	cet_user
+●	cet_industry
+			Each database has one table each to store data:
+●	logincred (table of cet_login)
+●	user_data (table of cet_user)
+●	industry_data  (table of cet_industry)
+
+      7.2. TABLE STRUCTURES:
+
+7.2.1. Table: Logincred
+      
+ 
+				Figure 5: logincred description
+
+7.2.2. Table: user_data
+ 
+				Figure 6: user_data description	
+
+
+
+
+7.2.3. Table: industry_data
