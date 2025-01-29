@@ -1,7 +1,7 @@
 Database Design for Carbon Equity Tracker  
 
 The Carbon Equity Tracker uses three databases to organize information effectively. Each database contains tables designed for specific purposes.  
-
+This project uses 3 different databases.
 1. Database: cet_login  
    Purpose: Manages user authentication by securely storing login credentials.  
    Table:  
