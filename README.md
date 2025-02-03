@@ -60,7 +60,8 @@ Welcome to **Carbon Equity Tracker**, an innovative Java-based desktop applicati
 
 🌎 *Empower your journey toward sustainability!* With real-time calculations, insightful data visualization, and eco-friendly tips, Carbon Equity Tracker makes it simple to measure your impact and act responsibly.  
 
-Let’s reduce our carbon footprint, one step at a time! 💚  
+Let’s reduce our carbon footprint, one step at a time! 💚 
+Future contributions are on process!!
 
 --- 
 
