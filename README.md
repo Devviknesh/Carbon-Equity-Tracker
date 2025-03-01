@@ -1,6 +1,6 @@
 # 🌿 **Carbon Equity Tracker**  
 
-Welcome to **Carbon Equity Tracker**, an innovative Java-based desktop application designed to track and manage carbon emissions in real-time! 🌍✨ Whether you're an individual user or part of an industry, this tool empowers you to measure, monitor, and take actionable steps toward a sustainable future. 🌱  
+Welcome to **Carbon Equity Tracker**, an innovative Java-based desktop application designed to track and manage carbon emissions in real-time! 🌍✨ Whether you're an individual user or part of an industry, this tool empowers you to measure, monitor, and take actionable steps toward a sustainable future. Individual Or industry!🌱  
 
 ---
 
