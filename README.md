@@ -8,7 +8,7 @@ Welcome to **Carbon Equity Tracker**, an innovative Java-based desktop applicati
 
 ### 🔐 **Secure Login System**  
 - Authenticate seamlessly with user-specific login credentials stored in a robust MySQL database.  
-- Choose between **User Mode** for individuals or **Industry Mode** for businesses based on your credentials.  
+- Choose between  for individuals or **Industry Mode** for businesses based on your credentials.  
 
 ### 🧑‍💻 **User Modes**  
 - **🌟 User Mode:**  
