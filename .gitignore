@@ -1,0 +1,25 @@
+# Compiled class files
+*.class
+bin/
+src/*.class
+
+# Environment files
+.env
+backend/.env
+
+# Node modules & build outputs
+node_modules/
+dist/
+frontend/dist/
+backend/dist/
+
+# OS/IDE metadata
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.DS_Store
+Thumbs.db

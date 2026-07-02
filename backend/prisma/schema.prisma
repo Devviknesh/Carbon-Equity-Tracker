@@ -1,0 +1,63 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  INDIVIDUAL
+  INDUSTRY
+  ADMIN
+}
+
+model User {
+  id                Int                @id @default(autoincrement())
+  name              String
+  email             String             @unique
+  passwordHash      String
+  role              Role               @default(INDIVIDUAL)
+  phone             String?
+  createdAt         DateTime           @default(now())
+  userEmissions     UserEmission[]
+  industryEmissions IndustryEmission[]
+
+  @@index([email])
+  @@index([role])
+}
+
+model UserEmission {
+  id                     Int      @id @default(autoincrement())
+  userId                 Int
+  user                   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  country                String
+  commuteDistanceKm      Float
+  wasteGeneratedKg       Float
+  electricityConsumedKwh Float
+  mealsPerDay            Int
+  totalEmissionsKg       Float
+  createdAt              DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([userId, createdAt])
+}
+
+model IndustryEmission {
+  id                         Int      @id @default(autoincrement())
+  userId                     Int
+  user                       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  month                      String
+  processType                String
+  energyConsumedKwh          Float
+  rawMaterialUsedTons        Float
+  totalWasteProducedTons     Float
+  transportationDistanceKm   Float
+  totalEmissionsKg           Float
+  createdAt                  DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([userId, createdAt])
+  @@index([processType])
+}

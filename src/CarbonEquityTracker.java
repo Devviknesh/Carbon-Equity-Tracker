@@ -98,7 +98,7 @@ public class CarbonEquityTracker extends JFrame {
         JPanel imagePanel = new JPanel();
         imagePanel.setPreferredSize(new Dimension(350, 706));
         imagePanel.setLayout(new BorderLayout());
-        ImageIcon icon = new ImageIcon("C:\\Users\\kumarasamy\\Desktop\\Java\\Eclipse\\CET_VER2\\src\\carblogin.png"); // Change to actual image path
+        ImageIcon icon = new ImageIcon("src/images/carbon.png"); // Change to actual image path
         JLabel imageLabel = new JLabel(icon);
         imagePanel.add(imageLabel, BorderLayout.CENTER);
         mainPanel.add(imagePanel, BorderLayout.EAST);
@@ -267,7 +267,7 @@ public class CarbonEquityTracker extends JFrame {
             resultsHeading.setAlignmentX(Component.CENTER_ALIGNMENT);
             resultsHeading.setBorder(BorderFactory.createEmptyBorder(10, 0, 30, 0)); 
             resultPanel.add(resultsHeading);
-            ImageIcon imageIcon = new ImageIcon("C:\\Users\\kumarasamy\\Desktop\\Java\\Eclipse\\CET_VER2\\src\\user.png");
+            ImageIcon imageIcon = new ImageIcon("src/images.png");
             JLabel imageLabel = new JLabel(imageIcon);
             imageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
             imageLabel.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0)); 
