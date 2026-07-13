@@ -178,4 +178,4 @@ MIT — see [LICENSE](LICENSE)
 
 ---
 
-*Built with 💚 for climate accountability. Showcased in portfolios, hackathons, and interviews.*
+*Built with 💚 for climate accountability, Showcased in portfolios, hackathons, and interviews.*
