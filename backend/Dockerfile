@@ -1,13 +1,10 @@
 FROM node:20-alpine
 WORKDIR /app
 
-# Install dependencies first (layer cache)
+# Install dependencies and copy schema
 COPY package*.json ./
-RUN npm ci
-
-# Generate Prisma client
 COPY prisma ./prisma
-RUN npx prisma generate
+RUN npm ci
 
 # Copy source and build
 COPY . .
@@ -22,4 +19,4 @@ EXPOSE 5000
 HEALTHCHECK --interval=30s --timeout=10s --start-period=15s --retries=3 \
   CMD wget -qO- http://localhost:5000/health || exit 1
 
-CMD ["node", "dist/index.js"]
+CMD ["npm", "start"]
