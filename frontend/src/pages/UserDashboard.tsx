@@ -9,6 +9,7 @@ import { DataTable } from '../components/ui/DataTable';
 import { EmissionsTrend } from '../components/charts/EmissionsTrend';
 import { CategoryBreakdown } from '../components/charts/CategoryBreakdown';
 import axios from 'axios';
+import { API_BASE_URL } from '../config/api';
 import {
   Car, Trash2, Zap, Utensils, MapPin, CheckCircle2,
   History, BarChart2, Leaf, TrendingDown,
@@ -50,7 +51,7 @@ export const UserDashboard: React.FC = () => {
 
   const fetchHistory = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/emissions/history');
+      const res = await axios.get(`${API_BASE_URL}/emissions/history`);
       setHistory(res.data);
     } catch (err) { console.error('Failed to fetch history', err); }
   };
@@ -61,7 +62,7 @@ export const UserDashboard: React.FC = () => {
     if (mealsPerDay <= 0 || isNaN(Number(mealsPerDay))) { setMealsError('Please enter a valid number of meals.'); return; }
     setIsSubmitting(true); setSuccessMsg('');
     try {
-      await axios.post('http://localhost:5000/api/emissions/user', {
+      await axios.post(`${API_BASE_URL}/emissions/user`, {
         country, commuteDistanceKm: commuteDistance, wasteGeneratedKg: wasteGenerated,
         electricityConsumedKwh: electricityConsumed, mealsPerDay: Number(mealsPerDay),
       });

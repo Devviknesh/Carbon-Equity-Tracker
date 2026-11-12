@@ -6,6 +6,7 @@ import { DataTable } from '../components/ui/DataTable';
 import { BenchmarkBar } from '../components/charts/BenchmarkBar';
 import { EmissionsTrend } from '../components/charts/EmissionsTrend';
 import axios from 'axios';
+import { API_BASE_URL } from '../config/api';
 import { Users, Building2, Database, ShieldCheck, RefreshCw, Activity, BarChart2, Award } from 'lucide-react';
 
 export const AdminDashboard: React.FC = () => {
@@ -16,7 +17,7 @@ export const AdminDashboard: React.FC = () => {
   const fetchStats = async () => {
     try {
       setLoading(true);
-      const res = await axios.get('http://localhost:5000/api/emissions/admin/stats');
+      const res = await axios.get(`${API_BASE_URL}/emissions/admin/stats`);
       setStats(res.data);
     } catch (err) { console.error('Failed to retrieve administrative statistics', err); }
     finally { setLoading(false); }

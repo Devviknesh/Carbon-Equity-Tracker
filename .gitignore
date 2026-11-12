@@ -5,7 +5,17 @@ src/*.class
 
 # Environment files
 .env
+.env.*
+*.env
 backend/.env
+backend/.env*
+frontend/.env
+frontend/.env*
+*.local
+
+# Vercel & Railway
+.vercel
+.railway
 
 # Node modules & build outputs
 node_modules/

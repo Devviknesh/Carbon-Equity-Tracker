@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { AnimatedBackground } from '../components/ui/AnimatedBackground';
 import { Leaf, Mail, Lock, LogIn, AlertTriangle, Eye, EyeOff, ArrowLeft, TrendingDown } from 'lucide-react';
 import axios from 'axios';
+import { API_BASE_URL } from '../config/api';
 
 export const Login: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -28,7 +29,7 @@ export const Login: React.FC = () => {
     }
 
     try {
-      const res = await axios.post('http://localhost:5000/api/auth/check-email', { email: emailToCheck });
+      const res = await axios.post(`${API_BASE_URL}/auth/check-email`, { email: emailToCheck });
       if (!res.data.exists) {
         setEmailWarning('This email is not registered. Please sign up first.');
       } else {

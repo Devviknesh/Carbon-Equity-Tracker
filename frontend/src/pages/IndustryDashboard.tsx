@@ -8,6 +8,7 @@ import { DataTable } from '../components/ui/DataTable';
 import { CategoryBreakdown } from '../components/charts/CategoryBreakdown';
 import { BenchmarkBar } from '../components/charts/BenchmarkBar';
 import axios from 'axios';
+import { API_BASE_URL } from '../config/api';
 import {
   Leaf, Settings, Calendar, Info, CheckCircle2,
   History, ShieldAlert, TrendingUp, Trash2, BarChart2, Zap,
@@ -53,7 +54,7 @@ export const IndustryDashboard: React.FC = () => {
 
   const fetchHistory = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/emissions/history');
+      const res = await axios.get(`${API_BASE_URL}/emissions/history`);
       setHistory(res.data);
     } catch (err) { console.error('Failed to retrieve history logs', err); }
   };
@@ -64,7 +65,7 @@ export const IndustryDashboard: React.FC = () => {
     if (rawMaterials <= 0 || isNaN(Number(rawMaterials))) { setMaterialsError('Please enter a valid raw material usage.'); return; }
     setIsSubmitting(true); setSuccessMsg('');
     try {
-      await axios.post('http://localhost:5000/api/emissions/industry', {
+      await axios.post(`${API_BASE_URL}/emissions/industry`, {
         month, processType,
         energyConsumedKwh: energyConsumed, rawMaterialUsedTons: Number(rawMaterials),
         totalWasteProducedTons: totalWaste, transportationDistanceKm: transportation,
