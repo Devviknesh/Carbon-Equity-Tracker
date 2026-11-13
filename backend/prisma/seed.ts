@@ -16,7 +16,6 @@ async function main() {
       email: 'user1@tracker.com',
       passwordHash,
       role: Role.INDIVIDUAL,
-      phone: '+12345678901',
     },
   });
 
@@ -29,7 +28,6 @@ async function main() {
       email: 'industry100@tracker.com',
       passwordHash,
       role: Role.INDUSTRY,
-      phone: '+19876543210',
     },
   });
 
@@ -42,7 +40,6 @@ async function main() {
       email: 'admin@tracker.com',
       passwordHash: adminPasswordHash,
       role: Role.ADMIN,
-      phone: '+15555555555',
     },
   });
 
