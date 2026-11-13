@@ -2,7 +2,7 @@
 
 > **A production-grade SaaS platform for tracking, measuring, and reducing carbon emissions — built for individuals, industries, and administrators.**
 
-[![CI](https://github.com/YOUR_USERNAME/Carbon-Equity-Tracker/actions/workflows/ci.yml/badge.svg)](https://github.com/YOUR_USERNAME/Carbon-Equity-Tracker/actions)
+[![CI](https://github.com/Devviknesh/Carbon-Equity-Tracker/actions/workflows/ci.yml/badge.svg)](https://github.com/Devviknesh/Carbon-Equity-Tracker/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue.svg)](https://www.typescriptlang.org/)
 [![Prisma](https://img.shields.io/badge/Prisma-ORM-2D3748.svg)](https://prisma.io)
@@ -10,6 +10,12 @@
 ---
 
 ## 🚀 Live Demo
+
+🌐 **Frontend:** https://frontend-five-vert-98.vercel.app
+
+🔗 **Backend API:** https://backend-production-338521ae.up.railway.app
+
+💚 **Health Check:** https://backend-production-338521ae.up.railway.app/health
 
 | Role | Email | Password |
 |------|-------|----------|
