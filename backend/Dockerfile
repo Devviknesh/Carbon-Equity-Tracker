@@ -1,18 +1,17 @@
 FROM node:20-alpine
 WORKDIR /app
 
-# Install dependencies and copy schema
+# Install OpenSSL (required by Prisma engine detection on Alpine)
+RUN apk add --no-cache openssl
+
+# Copy package files and prisma schema (needed for postinstall: prisma generate)
 COPY package*.json ./
 COPY prisma ./prisma
 RUN npm ci
 
-# Copy source and build
+# Copy source and build TypeScript
 COPY . .
 RUN npm run build
-
-# Run as non-root user for security
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
-USER appuser
 
 EXPOSE 5000
 
