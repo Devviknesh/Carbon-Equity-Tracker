@@ -97,8 +97,8 @@ async function main() {
 
 main()
   .catch((e) => {
-    console.error(e);
-    process.exit(1);
+    // Non-fatal: log warning but do NOT exit(1) so the start chain continues
+    console.warn('[SEED WARNING] Seed encountered an error (non-fatal, app will still start):', e.message);
   })
   .finally(async () => {
     await prisma.$disconnect();
