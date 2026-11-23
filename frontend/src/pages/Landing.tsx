@@ -1,231 +1,467 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
-import { AnimatedBackground } from '../components/ui/AnimatedBackground';
+import { Link, useNavigate } from 'react-router-dom';
 import {
-  Leaf, BarChart2, Shield, Users, Building2, Database,
-  ArrowRight, CheckCircle2, Zap, Globe, TrendingDown,
+  Leaf, ArrowRight, Plus, BarChart2, Scale, FileText, ChevronRight,
+  Bell, Search, LayoutDashboard, LineChart, FileBarChart, GitCompareArrows, Settings,
 } from 'lucide-react';
+import {
+  LineChart as ReLineChart, Line, BarChart, Bar,
+  XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid,
+} from 'recharts';
 
+/* ─── Animation helpers ─────────────────────────────────────────────── */
 const fadeUp = (delay = 0) => ({
-  initial: { opacity: 0, y: 30 },
+  initial: { opacity: 0, y: 28 },
   whileInView: { opacity: 1, y: 0 },
   viewport: { once: true },
   transition: { duration: 0.6, delay, ease: 'easeOut' },
 });
 
+/* ─── Demo data for dashboard preview ──────────────────────────────── */
+const trendData = [
+  { m: 'Jul', v: 42 }, { m: 'Aug', v: 51 }, { m: 'Sep', v: 48 },
+  { m: 'Oct', v: 63 }, { m: 'Nov', v: 57 }, { m: 'Dec', v: 71 },
+  { m: 'Jan', v: 65 }, { m: 'Feb', v: 78 }, { m: 'Mar', v: 82 },
+];
+const sectorData = [
+  { name: 'Energy',    v: 65, fill: '#57534E' },
+  { name: 'Transport', v: 48, fill: '#57534E' },
+  { name: 'Industry',  v: 82, fill: '#E87542' },
+  { name: 'Agri',      v: 37, fill: '#57534E' },
+  { name: 'Others',    v: 29, fill: '#57534E' },
+];
+
+const navLinks = ['Home', 'Platform', 'Methodology', 'Reports', 'About'];
+
+/* ─── Feature cards data ────────────────────────────────────────────── */
 const features = [
   {
-    icon: <Users className="w-6 h-6" />,
-    title: 'Individual Tracking',
-    desc: 'Track daily commute, energy use, diet, and waste. Instantly see your personal carbon footprint and sustainability score.',
-    color: 'text-emerald-400', bg: 'bg-emerald-500/10 border-emerald-500/20',
+    num: '01',
+    icon: <Leaf className="w-5 h-5 text-chart-neutral" />,
+    title: 'Carbon\nFootprint',
+    tags: ['Track emissions', 'across sectors'],
+    desc: 'Track emissions across sectors with real-time calculations.',
   },
   {
-    icon: <Building2 className="w-6 h-6" />,
-    title: 'Industry Analytics',
-    desc: 'Measure industrial process emissions — energy consumption, raw materials, waste, and transportation distance.',
-    color: 'text-cyan-400', bg: 'bg-cyan-500/10 border-cyan-500/20',
+    num: '02',
+    icon: <BarChart2 className="w-5 h-5 text-chart-neutral" />,
+    title: 'Industry\nBenchmarking',
+    tags: ['Compare performance', 'across industries'],
+    desc: 'Compare industrial emission performance across sectors.',
   },
   {
-    icon: <Shield className="w-6 h-6" />,
-    title: 'Admin Console',
-    desc: 'Global dashboard with aggregate metrics, comparative analytics, and real-time activity across all users.',
-    color: 'text-violet-400', bg: 'bg-violet-500/10 border-violet-500/20',
+    num: '03',
+    icon: <Scale className="w-5 h-5 text-chart-neutral" />,
+    title: 'Equity\nAnalytics',
+    tags: ['Measure fairness', 'in sustainability'],
+    desc: 'Measure fairness and equity in sustainability outcomes.',
+  },
+  {
+    num: '04',
+    icon: <FileText className="w-5 h-5 text-chart-neutral" />,
+    title: 'Impact\nReporting',
+    tags: ['Generate insightful', 'reports'],
+    desc: 'Generate insightful reports with actionable sustainability data.',
   },
 ];
 
-const steps = [
-  { num: '01', title: 'Create Account', desc: 'Sign up as Individual, Industry, or Admin in under 30 seconds.' },
-  { num: '02', title: 'Enter Parameters', desc: 'Input your activity data using interactive sliders and dropdowns.' },
-  { num: '03', title: 'Get Instant Results', desc: 'See real-time CO₂ estimates powered by proven emission factors.' },
-  { num: '04', title: 'Track Progress', desc: 'Monitor your trend over time and compare against benchmarks.' },
-];
-
-const techStack = [
-  { label: 'React 18', color: '#61dafb' },
-  { label: 'TypeScript', color: '#3178c6' },
-  { label: 'Node.js', color: '#84cc16' },
-  { label: 'Prisma', color: '#10b981' },
-  { label: 'MySQL', color: '#f59e0b' },
-  { label: 'Recharts', color: '#8b5cf6' },
-  { label: 'Tailwind', color: '#06b6d4' },
-  { label: 'Framer', color: '#ec4899' },
-];
-
+/* ─── Component ─────────────────────────────────────────────────────── */
 export const Landing: React.FC = () => {
+  const [activeNav, setActiveNav] = useState('Home');
+  const navigate = useNavigate();
+
   return (
-    <div className="min-h-screen text-slate-100 relative overflow-x-hidden">
-      <AnimatedBackground />
+    <div className="min-h-screen bg-bg-primary text-ink-primary overflow-x-hidden">
 
-      {/* ── Navbar ─────────────────────────────────────────────── */}
-      <header className="relative z-20 max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <motion.div
-            animate={{ rotate: [0, 8, 0, -8, 0] }}
-            transition={{ repeat: Infinity, duration: 5, ease: 'easeInOut' }}
-            className="w-9 h-9 rounded-xl bg-emerald-500/15 border border-emerald-500/20 flex items-center justify-center text-accent-glow"
+      {/* ══ NAVBAR ══════════════════════════════════════════════════ */}
+      <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-8 py-4 border-b border-border/60 bg-bg-primary/90 backdrop-blur-sm">
+        {/* Logo */}
+        <Link to="/" className="flex items-center gap-2 group">
+          <div className="w-7 h-7 rounded-lg bg-accent-primary/15 border border-accent-primary/30 flex items-center justify-center">
+            <Leaf className="w-4 h-4 text-accent-primary" />
+          </div>
+          <span className="text-sm font-semibold text-ink-primary tracking-tight">
+            Carbon Equity<br className="hidden" />
+            <span className="text-[10px] text-ink-muted block leading-none -mt-0.5">Tracker</span>
+          </span>
+        </Link>
+
+        {/* Center links */}
+        <div className="hidden md:flex items-center gap-7">
+          {navLinks.map(link => (
+            <button
+              key={link}
+              onClick={() => setActiveNav(link)}
+              className={`text-sm transition-colors duration-150 pb-0.5 relative ${
+                activeNav === link
+                  ? 'text-ink-primary font-medium'
+                  : 'text-ink-muted hover:text-ink-secondary'
+              }`}
+            >
+              {link}
+              {activeNav === link && (
+                <motion.div
+                  layoutId="nav-underline"
+                  className="absolute -bottom-0.5 left-0 right-0 h-px bg-accent-primary"
+                />
+              )}
+            </button>
+          ))}
+        </div>
+
+        {/* Open Dashboard */}
+        <Link to="/login" className="btn-white text-xs px-4 py-2">
+          Open Dashboard <ChevronRight className="w-3.5 h-3.5" />
+        </Link>
+      </nav>
+
+      {/* ══ HERO ════════════════════════════════════════════════════ */}
+      <section className="relative pt-28 pb-0 px-6 overflow-hidden min-h-[88vh] flex flex-col items-center justify-center">
+        {/* Warm bronze glow at bottom */}
+        <div className="hero-warm-glow absolute inset-0 z-0" />
+
+        {/* Grid texture */}
+        <div
+          className="absolute inset-0 z-0 opacity-40"
+          style={{
+            backgroundImage:
+              'linear-gradient(rgba(232,117,66,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(232,117,66,0.03) 1px, transparent 1px)',
+            backgroundSize: '52px 52px',
+          }}
+        />
+
+        {/* Hero frame */}
+        <div className="relative z-10 w-full max-w-3xl mx-auto">
+          {/* Thin rectangular frame */}
+          <div
+            className="relative border border-border/70 rounded-sm px-10 pt-14 pb-16 text-center"
+            style={{ background: 'rgba(8,8,7,0.3)' }}
           >
-            <Leaf className="w-5 h-5" />
-          </motion.div>
-          <span className="font-bold text-lg tracking-tight">
-            Carbon<span className="text-accent-glow">Equity</span>
-          </span>
-        </div>
-        <div className="flex items-center gap-3">
-          <Link to="/login"  className="btn-ghost text-sm px-4 py-2">Sign In</Link>
-          <Link to="/signup" className="btn-primary text-sm px-5 py-2">Get Started</Link>
-        </div>
-      </header>
+            {/* Corner markers (orange squares) */}
+            {[
+              'absolute -top-1 -left-1 w-2.5 h-2.5 bg-accent-primary',
+              'absolute -top-1 -right-1 w-2.5 h-2.5 bg-accent-primary',
+              'absolute -bottom-1 -left-1 w-2.5 h-2.5 bg-accent-primary',
+              'absolute -bottom-1 -right-1 w-2.5 h-2.5 bg-accent-primary',
+            ].map((cls, i) => <div key={i} className={cls} />)}
 
-      {/* ── Hero ───────────────────────────────────────────────── */}
-      <section className="relative z-10 text-center px-6 pt-16 pb-24 max-w-5xl mx-auto">
-        <motion.div {...fadeUp(0.1)}>
-          <span className="badge-green mb-6 inline-flex">
-            <TrendingDown className="w-3.5 h-3.5" />
-            Open-source · Production-ready
-          </span>
-        </motion.div>
-
-        <motion.h1
-          {...fadeUp(0.2)}
-          className="text-5xl md:text-7xl font-black tracking-tight leading-none mb-6"
-        >
-          Track Your{' '}
-          <span
-            className="text-transparent bg-clip-text"
-            style={{ backgroundImage: 'linear-gradient(135deg,#10b981,#06b6d4,#8b5cf6)' }}
-          >
-            Carbon Impact
-          </span>
-          <br />Before It Tracks You.
-        </motion.h1>
-
-        <motion.p {...fadeUp(0.35)} className="text-lg text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed">
-          A SaaS platform for individuals, industries, and administrators to measure,
-          monitor, and reduce carbon emissions — with real-time analytics and cinematic
-          visualizations.
-        </motion.p>
-
-        <motion.div {...fadeUp(0.45)} className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Link to="/signup" className="btn-primary text-base px-8 py-3.5 shadow-glow-md">
-            Start Tracking Free
-            <ArrowRight className="w-5 h-5" />
-          </Link>
-          <Link to="/login" className="btn-secondary text-base px-8 py-3.5">
-            Sign In
-          </Link>
-        </motion.div>
-
-        {/* Hero stats */}
-        <motion.div
-          {...fadeUp(0.55)}
-          className="grid grid-cols-3 gap-6 max-w-lg mx-auto mt-16 pt-10 border-t border-white/6"
-        >
-          {[
-            { val: '100%', label: 'Free to Use' },
-            { val: '3',    label: 'User Roles' },
-            { val: 'Real-time', label: 'CO₂ Calculations' },
-          ].map((s, i) => (
-            <div key={i} className="text-center">
-              <div className="text-2xl font-black text-accent-glow">{s.val}</div>
-              <div className="text-xs text-slate-500 mt-0.5">{s.label}</div>
-            </div>
-          ))}
-        </motion.div>
-      </section>
-
-      {/* ── Features ───────────────────────────────────────────── */}
-      <section className="relative z-10 max-w-6xl mx-auto px-6 py-20">
-        <motion.div {...fadeUp()} className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-extrabold mb-3">Built for Every Role</h2>
-          <p className="text-slate-400 max-w-xl mx-auto">Three specialized dashboards, one unified platform.</p>
-        </motion.div>
-
-        <div className="grid md:grid-cols-3 gap-6">
-          {features.map((f, i) => (
-            <motion.div key={i} {...fadeUp(i * 0.12)} className="glass-card p-7">
-              <div className={`w-12 h-12 rounded-2xl border flex items-center justify-center mb-5 ${f.bg} ${f.color}`}>
-                {f.icon}
-              </div>
-              <h3 className="text-lg font-bold mb-2">{f.title}</h3>
-              <p className="text-slate-400 text-sm leading-relaxed">{f.desc}</p>
+            {/* Floating pill labels */}
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.8, duration: 0.5 }}
+              className="absolute left-0 top-1/3 -translate-x-1/2 -translate-y-1/2"
+            >
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-accent-primary/90 text-white text-xs font-semibold shadow-orange-sm whitespace-nowrap">
+                Transparent
+              </span>
             </motion.div>
-          ))}
-        </div>
-      </section>
-
-      {/* ── How It Works ───────────────────────────────────────── */}
-      <section className="relative z-10 max-w-5xl mx-auto px-6 py-20">
-        <motion.div {...fadeUp()} className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-extrabold mb-3">How It Works</h2>
-          <p className="text-slate-400 max-w-xl mx-auto">From sign-up to insight in four simple steps.</p>
-        </motion.div>
-
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {steps.map((s, i) => (
-            <motion.div key={i} {...fadeUp(i * 0.1)} className="glass-card p-6 relative">
-              <span className="text-4xl font-black text-white/5 absolute top-4 right-4">{s.num}</span>
-              <span className="text-xs font-black text-accent-glow uppercase tracking-widest block mb-3">{s.num}</span>
-              <h3 className="font-bold mb-2">{s.title}</h3>
-              <p className="text-slate-400 text-sm leading-relaxed">{s.desc}</p>
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.9, duration: 0.5 }}
+              className="absolute right-0 top-1/5 translate-x-1/2 -translate-y-1/2"
+            >
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-bg-elevated border border-border text-ink-secondary text-xs font-medium whitespace-nowrap">
+                Data-driven
+              </span>
             </motion.div>
-          ))}
-        </div>
-      </section>
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 1.0, duration: 0.5 }}
+              className="absolute right-0 bottom-1/4 translate-x-1/3"
+            >
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-accent-warm/90 text-bg-primary text-xs font-semibold whitespace-nowrap">
+                Equity focused
+              </span>
+            </motion.div>
 
-      {/* ── Tech Stack ─────────────────────────────────────────── */}
-      <section className="relative z-10 max-w-4xl mx-auto px-6 py-16 text-center">
-        <motion.div {...fadeUp()}>
-          <p className="text-xs font-bold uppercase tracking-widest text-slate-600 mb-6">Built with modern stack</p>
-          <div className="flex flex-wrap justify-center gap-3">
-            {techStack.map((t, i) => (
-              <motion.span
-                key={i}
-                initial={{ opacity: 0, scale: 0.85 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.05 }}
-                className="px-4 py-2 rounded-xl bg-white/5 border border-white/8 text-sm font-semibold"
-                style={{ color: t.color }}
+            {/* Main headline */}
+            <motion.h1
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.1 }}
+              className="text-5xl md:text-6xl lg:text-7xl font-bold leading-tight tracking-tight mb-4"
+            >
+              Measure Carbon.
+              <br />
+              Understand{' '}
+              <span className="font-serif-italic text-accent-primary text-shadow-orange">
+                equity.
+              </span>
+            </motion.h1>
+
+            {/* Subtext */}
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.4, duration: 0.6 }}
+              className="text-ink-secondary text-base md:text-lg max-w-lg mx-auto leading-relaxed mb-10"
+            >
+              Track emissions. Compare industries. Make sustainability measurable and equitable.
+            </motion.p>
+
+            {/* CTA */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6, duration: 0.5 }}
+              className="flex items-center justify-center gap-3"
+            >
+              <Link
+                to="/login"
+                className="inline-flex items-center gap-3 px-6 py-2.5 rounded-full border border-border text-ink-primary text-sm font-medium hover:border-accent-primary hover:text-accent-primary transition-all duration-200 group"
               >
-                {t.label}
-              </motion.span>
-            ))}
+                <span className="w-7 h-7 rounded-full bg-accent-primary flex items-center justify-center group-hover:bg-accent-secondary transition-colors">
+                  <ArrowRight className="w-3.5 h-3.5 text-white" />
+                </span>
+                Explore the platform
+              </Link>
+            </motion.div>
           </div>
-        </motion.div>
+        </div>
       </section>
 
-      {/* ── CTA Banner ─────────────────────────────────────────── */}
-      <section className="relative z-10 max-w-4xl mx-auto px-6 pb-24">
-        <motion.div
-          {...fadeUp()}
-          className="glass-card p-10 text-center"
-          style={{ background: 'linear-gradient(135deg,rgba(16,185,129,.08),rgba(6,182,212,.05),rgba(139,92,246,.08))' }}
-        >
-          <Globe className="w-10 h-10 text-accent-glow mx-auto mb-4" />
-          <h2 className="text-3xl font-extrabold mb-3">Start Reducing Your Footprint Today</h2>
-          <p className="text-slate-400 mb-7 max-w-lg mx-auto">
-            Join Carbon Equity Tracker and turn your emissions data into actionable sustainability insights.
+      {/* ══ ABOUT SECTION ═══════════════════════════════════════════ */}
+      <section className="py-20 px-6 text-center border-t border-border/40">
+        <motion.div {...fadeUp(0.1)} className="max-w-2xl mx-auto">
+          <div className="flex items-center gap-4 justify-center mb-6">
+            <div className="h-px flex-1 bg-border/60 max-w-24" />
+            <span className="section-label tracking-[0.25em]">About the Platform</span>
+            <div className="h-px flex-1 bg-border/60 max-w-24" />
+          </div>
+          <p className="text-xl md:text-2xl font-light text-ink-secondary leading-relaxed">
+            Carbon Equity Tracker combines emissions measurement, industry comparisons and equitable
+            sustainability insights to help build a{' '}
+            <span className="text-ink-primary font-medium">greener, fairer future.</span>
           </p>
-          <Link to="/signup" className="btn-primary text-base px-10 py-3.5 shadow-glow-lg">
-            Create Free Account
-            <ArrowRight className="w-5 h-5" />
-          </Link>
         </motion.div>
       </section>
 
-      {/* ── Footer ─────────────────────────────────────────────── */}
-      <footer className="relative z-10 border-t border-white/6 py-8 px-6">
-        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-slate-600">
-          <div className="flex items-center gap-2">
-            <Leaf className="w-4 h-4 text-accent-glow" />
-            <span>Carbon<strong className="text-accent-glow">Equity</strong> Tracker</span>
+      {/* ══ FEATURES SECTION ════════════════════════════════════════ */}
+      <section className="py-16 px-6 md:px-10 max-w-7xl mx-auto">
+        {/* Section header */}
+        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 mb-10">
+          <motion.div {...fadeUp(0.05)}>
+            <h2 className="text-4xl md:text-5xl font-bold leading-tight">
+              Insights that
+              <br />
+              <span className="font-serif-italic text-accent-primary">drive change</span>
+            </h2>
+          </motion.div>
+          <motion.div {...fadeUp(0.15)}>
+            <Link
+              to="/login"
+              className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full border border-border text-ink-secondary text-sm hover:border-accent-primary hover:text-accent-primary transition-all duration-200 group whitespace-nowrap"
+            >
+              <span className="w-7 h-7 rounded-full bg-accent-primary flex items-center justify-center group-hover:bg-accent-secondary transition-colors">
+                <ArrowRight className="w-3.5 h-3.5 text-white" />
+              </span>
+              View dashboard
+            </Link>
+          </motion.div>
+        </div>
+
+        {/* Feature cards grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {features.map((f, i) => (
+            <motion.div
+              key={i}
+              {...fadeUp(i * 0.08)}
+              className="dark-card p-6 flex flex-col gap-5 hover:border-border-light transition-all duration-200 group cursor-pointer"
+              whileHover={{ y: -2 }}
+            >
+              {/* Number + icon row */}
+              <div className="flex items-start justify-between">
+                <span className="text-xs font-semibold text-ink-muted tracking-widest">{f.num}</span>
+                <div className="w-8 h-8 rounded-lg bg-bg-elevated border border-border flex items-center justify-center group-hover:border-border-light transition-colors">
+                  {f.icon}
+                </div>
+              </div>
+
+              {/* Title */}
+              <h3 className="text-lg font-semibold leading-tight whitespace-pre-line text-ink-primary">
+                {f.title}
+              </h3>
+
+              {/* Tags */}
+              <div className="flex flex-wrap gap-1.5">
+                {f.tags.map((tag, j) => (
+                  <span key={j} className="feature-tag">{tag}</span>
+                ))}
+              </div>
+
+              {/* Footer — orange plus */}
+              <div className="mt-auto pt-2">
+                <button
+                  className="btn-circle-orange"
+                  onClick={() => navigate('/login')}
+                  aria-label="Learn more"
+                >
+                  <Plus className="w-4 h-4" />
+                </button>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      {/* ══ DASHBOARD PREVIEW ═══════════════════════════════════════ */}
+      <section className="py-10 px-6 md:px-10 max-w-7xl mx-auto pb-20">
+        <motion.div
+          {...fadeUp(0.1)}
+          className="dashboard-preview shadow-card overflow-hidden"
+        >
+          {/* Preview top bar */}
+          <div className="bg-bg-secondary border-b border-border px-5 py-3 flex items-center justify-between">
+            {/* Logo */}
+            <div className="flex items-center gap-2">
+              <div className="w-5 h-5 rounded bg-accent-primary/20 border border-accent-primary/30 flex items-center justify-center">
+                <Leaf className="w-3 h-3 text-accent-primary" />
+              </div>
+              <span className="text-xs font-semibold text-ink-secondary leading-tight">
+                Carbon Equity<br />
+                <span className="text-[9px] text-ink-muted">Tracker</span>
+              </span>
+            </div>
+            {/* Search */}
+            <div className="hidden md:flex items-center gap-2 bg-bg-elevated border border-border rounded-lg px-3 py-1.5 w-48">
+              <Search className="w-3.5 h-3.5 text-ink-muted" />
+              <span className="text-xs text-ink-muted">Search industries, regions…</span>
+            </div>
+            {/* Icons */}
+            <div className="flex items-center gap-3">
+              <Bell className="w-4 h-4 text-ink-muted" />
+              <div className="w-7 h-7 rounded-full bg-accent-primary flex items-center justify-center text-xs font-bold text-white">D</div>
+            </div>
           </div>
-          <span>© {new Date().getFullYear()} — Open Source SaaS for Climate Action</span>
-          <div className="flex gap-4">
-            <Link to="/login"  className="hover:text-slate-300 transition-colors">Sign In</Link>
-            <Link to="/signup" className="hover:text-slate-300 transition-colors">Sign Up</Link>
+
+          <div className="flex">
+            {/* Sidebar */}
+            <aside className="hidden md:flex flex-col w-36 border-r border-border bg-bg-secondary p-3 gap-1 min-h-64">
+              {[
+                { icon: <LayoutDashboard className="w-3.5 h-3.5" />, label: 'Dashboard', active: true },
+                { icon: <LineChart className="w-3.5 h-3.5" />, label: 'Analytics' },
+                { icon: <FileBarChart className="w-3.5 h-3.5" />, label: 'Reports' },
+                { icon: <GitCompareArrows className="w-3.5 h-3.5" />, label: 'Comparisons' },
+                { icon: <Settings className="w-3.5 h-3.5" />, label: 'Settings' },
+              ].map(({ icon, label, active }) => (
+                <div
+                  key={label}
+                  className={`flex items-center gap-2 px-2.5 py-2 rounded-lg text-[11px] font-medium transition-colors ${
+                    active
+                      ? 'bg-accent-primary/10 text-accent-primary'
+                      : 'text-ink-muted hover:text-ink-secondary'
+                  }`}
+                >
+                  {icon}
+                  <span>{label}</span>
+                </div>
+              ))}
+            </aside>
+
+            {/* Main content */}
+            <div className="flex-1 p-4 bg-bg-primary">
+              {/* KPI row */}
+              <div className="grid grid-cols-3 gap-3 mb-4">
+                {[
+                  { label: 'Total Emissions', icon: <Leaf className="w-3 h-3 text-accent-primary" />, sparkColor: '#E87542' },
+                  { label: 'Industry Average', icon: <BarChart2 className="w-3 h-3 text-chart-neutral" />, sparkColor: '#57534E' },
+                  { label: 'Equity Index',    icon: <Scale className="w-3 h-3 text-chart-neutral" />,   sparkColor: '#57534E' },
+                ].map(({ label, icon, sparkColor }, i) => (
+                  <div key={i} className="bg-bg-card border border-border rounded-xl p-3">
+                    <div className="flex items-center gap-1.5 mb-2 text-[10px] text-ink-muted font-medium">
+                      {icon} {label}
+                    </div>
+                    {/* Tiny sparkline */}
+                    <ResponsiveContainer width="100%" height={28}>
+                      <ReLineChart data={trendData.slice(i * 2)} margin={{ top: 2, right: 2, bottom: 2, left: 2 }}>
+                        <Line type="monotone" dataKey="v" stroke={sparkColor} strokeWidth={1.5} dot={false} />
+                      </ReLineChart>
+                    </ResponsiveContainer>
+                  </div>
+                ))}
+              </div>
+
+              {/* Charts row */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                {/* Emissions Trend */}
+                <div className="bg-bg-card border border-border rounded-xl p-3 md:col-span-1">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-[10px] font-semibold text-ink-secondary">Emissions Trend</span>
+                    <div className="flex gap-1">
+                      {['1M','3M','1Y','All'].map((t, i) => (
+                        <span key={t} className={`text-[9px] px-1.5 py-0.5 rounded ${i === 2 ? 'bg-accent-primary text-white' : 'text-ink-muted'}`}>{t}</span>
+                      ))}
+                    </div>
+                  </div>
+                  <ResponsiveContainer width="100%" height={70}>
+                    <ReLineChart data={trendData} margin={{ top: 4, right: 4, bottom: 0, left: 0 }}>
+                      <CartesianGrid stroke="#302A26" strokeOpacity={0.4} vertical={false} />
+                      <Line type="monotone" dataKey="v" stroke="#E87542" strokeWidth={2} dot={{ r: 2, fill: '#E87542' }} />
+                    </ReLineChart>
+                  </ResponsiveContainer>
+                </div>
+
+                {/* Sector Comparison */}
+                <div className="bg-bg-card border border-border rounded-xl p-3">
+                  <span className="text-[10px] font-semibold text-ink-secondary block mb-2">Sector Comparison</span>
+                  <ResponsiveContainer width="100%" height={70}>
+                    <BarChart data={sectorData} margin={{ top: 2, right: 2, bottom: 0, left: 0 }} barSize={10}>
+                      <CartesianGrid stroke="#302A26" strokeOpacity={0.4} vertical={false} />
+                      <XAxis dataKey="name" tick={{ fontSize: 7, fill: '#77716C' }} axisLine={false} tickLine={false} />
+                      <Bar dataKey="v" radius={[2, 2, 0, 0]}>
+                        {sectorData.map((entry, index) => (
+                          <rect key={index} fill={entry.fill} />
+                        ))}
+                      </Bar>
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+
+                {/* Recent Activity */}
+                <div className="bg-bg-card border border-border rounded-xl p-3">
+                  <span className="text-[10px] font-semibold text-ink-secondary block mb-2">Recent Activity</span>
+                  <div className="flex flex-col gap-2">
+                    {[
+                      { label: 'New report generated', time: '7h ago', dot: '#E87542' },
+                      { label: 'Industry comparison updated', time: '7h ago', dot: '#57534E' },
+                      { label: 'Analysis completed', time: '5h ago', dot: '#E87542' },
+                    ].map((item, i) => (
+                      <div key={i} className="flex items-start gap-2">
+                        <div className="w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0" style={{ background: item.dot }} />
+                        <div>
+                          <p className="text-[9px] text-ink-secondary leading-tight">{item.label}</p>
+                          <p className="text-[8px] text-ink-muted">{item.time}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+        <p className="text-center text-xs text-ink-muted mt-3">
+          Illustrative preview — real data loads after login
+        </p>
+      </section>
+
+      {/* ══ FOOTER ══════════════════════════════════════════════════ */}
+      <footer className="border-t border-border py-8 px-6">
+        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-2">
+            <Leaf className="w-4 h-4 text-accent-primary" />
+            <span className="text-sm font-semibold text-ink-secondary">
+              Carbon <span className="text-accent-primary">Equity</span> Tracker
+            </span>
+          </div>
+          <span className="text-xs text-ink-muted">© {new Date().getFullYear()} — Sustainability analytics for a fairer future</span>
+          <div className="flex gap-5">
+            <Link to="/login"  className="text-xs text-ink-muted hover:text-ink-secondary transition-colors">Sign In</Link>
+            <Link to="/signup" className="text-xs text-ink-muted hover:text-ink-secondary transition-colors">Sign Up</Link>
           </div>
         </div>
       </footer>

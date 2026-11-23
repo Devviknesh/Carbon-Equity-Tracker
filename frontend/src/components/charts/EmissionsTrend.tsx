@@ -5,7 +5,6 @@ import {
 } from 'recharts';
 
 interface DataPoint { name: string; value: number; }
-
 interface EmissionsTrendProps {
   data: DataPoint[];
   color?: string;
@@ -15,9 +14,9 @@ interface EmissionsTrendProps {
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload?.length) {
     return (
-      <div className="px-3 py-2 rounded-xl bg-carbon-900/90 border border-white/10 text-sm backdrop-blur-xl">
-        <p className="text-slate-400 text-xs mb-1">{label}</p>
-        <p className="font-bold text-accent-glow">{payload[0].value.toFixed(2)} <span className="font-normal text-slate-400">kg CO₂</span></p>
+      <div className="px-3 py-2 rounded-xl bg-bg-elevated border border-border text-sm shadow-card">
+        <p className="text-ink-muted text-xs mb-1">{label}</p>
+        <p className="font-bold text-accent-primary">{payload[0].value.toFixed(2)} <span className="font-normal text-ink-muted">kg CO₂</span></p>
       </div>
     );
   }
@@ -26,48 +25,35 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 
 export const EmissionsTrend: React.FC<EmissionsTrendProps> = ({
   data,
-  color = '#10b981',
+  color = '#E87542',
   label = 'Emissions',
 }) => {
   if (!data.length) {
     return (
-      <div className="h-[200px] flex items-center justify-center text-slate-500 text-sm">
+      <div className="h-[200px] flex items-center justify-center text-ink-muted text-sm">
         No trend data yet — log your first entry.
       </div>
     );
   }
-
   return (
     <ResponsiveContainer width="100%" height={200}>
       <AreaChart data={data} margin={{ top: 4, right: 4, left: -24, bottom: 0 }}>
         <defs>
-          <linearGradient id="trendGradient" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%"   stopColor={color} stopOpacity={0.25} />
+          <linearGradient id="trendGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%"   stopColor={color} stopOpacity={0.3} />
             <stop offset="100%" stopColor={color} stopOpacity={0.02} />
           </linearGradient>
         </defs>
-        <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" />
-        <XAxis
-          dataKey="name"
-          tick={{ fill: '#64748b', fontSize: 10 }}
-          axisLine={false}
-          tickLine={false}
-        />
-        <YAxis
-          tick={{ fill: '#64748b', fontSize: 10 }}
-          axisLine={false}
-          tickLine={false}
-        />
+        <CartesianGrid strokeDasharray="3 3" stroke="#302A26" strokeOpacity={0.5} />
+        <XAxis dataKey="name" tick={{ fill: '#77716C', fontSize: 10 }} axisLine={false} tickLine={false} />
+        <YAxis tick={{ fill: '#77716C', fontSize: 10 }} axisLine={false} tickLine={false} />
         <Tooltip content={<CustomTooltip />} />
         <Area
-          type="monotone"
-          dataKey="value"
-          stroke={color}
-          strokeWidth={2}
-          fill="url(#trendGradient)"
-          dot={false}
-          activeDot={{ r: 5, fill: color, stroke: 'rgba(255,255,255,0.2)', strokeWidth: 2 }}
-          animationDuration={800}
+          type="monotone" dataKey="value"
+          stroke={color} strokeWidth={2}
+          fill="url(#trendGrad)" dot={false}
+          activeDot={{ r: 4, fill: color, stroke: '#302A26', strokeWidth: 2 }}
+          animationDuration={700}
         />
       </AreaChart>
     </ResponsiveContainer>
